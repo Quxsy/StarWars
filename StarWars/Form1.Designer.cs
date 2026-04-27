@@ -93,6 +93,8 @@ namespace StarWars
             this.label39 = new System.Windows.Forms.Label();
             this.label40 = new System.Windows.Forms.Label();
             this.lstStarships = new System.Windows.Forms.ListBox();
+            this.btnAddFavorite = new System.Windows.Forms.Button();
+            this.lstFavorites = new System.Windows.Forms.ListBox();
             this.SuspendLayout();
             // 
             // txtPlanetID
@@ -288,7 +290,7 @@ namespace StarWars
             // 
             // btnPerson
             // 
-            this.btnPerson.Location = new System.Drawing.Point(589, 109);
+            this.btnPerson.Location = new System.Drawing.Point(587, 108);
             this.btnPerson.Name = "btnPerson";
             this.btnPerson.Size = new System.Drawing.Size(75, 23);
             this.btnPerson.TabIndex = 21;
@@ -298,7 +300,7 @@ namespace StarWars
             // 
             // txtPersonID
             // 
-            this.txtPersonID.Location = new System.Drawing.Point(576, 83);
+            this.txtPersonID.Location = new System.Drawing.Point(574, 82);
             this.txtPersonID.Name = "txtPersonID";
             this.txtPersonID.Size = new System.Drawing.Size(100, 20);
             this.txtPersonID.TabIndex = 22;
@@ -675,11 +677,31 @@ namespace StarWars
             this.lstStarships.TabIndex = 64;
             this.lstStarships.SelectedIndexChanged += new System.EventHandler(this.lstStarships_SelectedIndexChanged);
             // 
+            // btnAddFavorite
+            // 
+            this.btnAddFavorite.Location = new System.Drawing.Point(358, 22);
+            this.btnAddFavorite.Name = "btnAddFavorite";
+            this.btnAddFavorite.Size = new System.Drawing.Size(95, 23);
+            this.btnAddFavorite.TabIndex = 65;
+            this.btnAddFavorite.Text = "Add to Favorites";
+            this.btnAddFavorite.UseVisualStyleBackColor = true;
+            this.btnAddFavorite.Click += new System.EventHandler(this.btnAddFavorite_Click);
+            // 
+            // lstFavorites
+            // 
+            this.lstFavorites.FormattingEnabled = true;
+            this.lstFavorites.Location = new System.Drawing.Point(251, 353);
+            this.lstFavorites.Name = "lstFavorites";
+            this.lstFavorites.Size = new System.Drawing.Size(246, 95);
+            this.lstFavorites.TabIndex = 66;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(776, 500);
+            this.Controls.Add(this.lstFavorites);
+            this.Controls.Add(this.btnAddFavorite);
             this.Controls.Add(this.lstStarships);
             this.Controls.Add(this.label40);
             this.Controls.Add(this.label39);
@@ -821,6 +843,8 @@ namespace StarWars
         private System.Windows.Forms.Label label39;
         private System.Windows.Forms.Label label40;
         private System.Windows.Forms.ListBox lstStarships;
+        private System.Windows.Forms.Button btnAddFavorite;
+        private System.Windows.Forms.ListBox lstFavorites;
     }
 }
 

@@ -14,6 +14,10 @@ namespace StarWars
 {
     public partial class Form1 : Form
     {
+        List<FavoriteItem> favorites = new List<FavoriteItem>();
+
+        string currentType = "";
+        string currentName = "";
         public Form1()
         {
             InitializeComponent();
@@ -21,11 +25,18 @@ namespace StarWars
 
         private async void btnPlanet_Click(object sender, EventArgs e)
         {
-            string url = $"https://swapi.py4e.com/api/planets/{txtPlanetID.Text}/";
+            //INPUT VALIDATION
+            if (!int.TryParse(txtPlanetID.Text, out int planetId))
+            {
+                MessageBox.Show("Please enter a valid Planet ID (number).");
+                return;
+            }
+
+            string url = $"https://swapi.py4e.com/api/planets/{planetId}/";
 
             string json = await JsonHelper.GetJsonAsync(url);
 
-            if (json == null)
+            if (string.IsNullOrEmpty(json))
             {
                 MessageBox.Show("Planet not found.");
                 return;
@@ -33,25 +44,35 @@ namespace StarWars
 
             Planet planet = JsonConvert.DeserializeObject<Planet>(json);
 
-            lblPlanetName.Text = planet.name;
-            lblRotationPeriod.Text = planet.rotation_period;
-            lblOrbitalPeriod.Text = planet.orbital_period;
-            lblDiameter.Text = planet.diameter;
-            lblClimate.Text = planet.climate;
-            lblGravity.Text = planet.gravity;
-            lblTerrain.Text = planet.terrain;
-            lblSurfaceWater.Text = planet.surface_water;
-            lblPopulation.Text = planet.population;
+            currentType = "Planet";
+            currentName = planet.Name;
+
+            lblPlanetName.Text = planet.Name;
+            lblRotationPeriod.Text = planet.RotationPeriod;
+            lblOrbitalPeriod.Text = planet.OrbitalPeriod;
+            lblDiameter.Text = planet.Diameter;
+            lblClimate.Text = planet.Climate;
+            lblGravity.Text = planet.Gravity;
+            lblTerrain.Text = planet.Terrain;
+            lblSurfaceWater.Text = planet.SurfaceWater;
+            lblPopulation.Text = planet.Population;
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
-
+            
         }
 
         private async void btnPerson_Click(object sender, EventArgs e)
         {
-            string url = $"https://swapi.py4e.com/api/people/{txtPersonID.Text}/";
+            //INPUT VALIDATION
+            if (!int.TryParse(txtPersonID.Text, out int personId))
+            {
+                MessageBox.Show("Please enter a valid Person ID (number).");
+                return;
+            }
+
+            string url = $"https://swapi.py4e.com/api/people/{personId}/";
 
             string json = await JsonHelper.GetJsonAsync(url);
 
@@ -63,29 +84,34 @@ namespace StarWars
 
             Person person = JsonConvert.DeserializeObject<Person>(json);
 
-            lblPersonName.Text = person.name;
-            lblHeight.Text = person.height;
-            lblMass.Text = person.mass;
-            lblHairColor.Text = person.hair_color;
-            lblSkinColor.Text = person.skin_color;
-            lblEyeColor.Text = person.eye_color;
-            lblBirthYear.Text = person.birth_year;
-            lblGender.Text = person.gender;
+            PersonEntity personEntity = new PersonEntity(person.Name, person.Gender);
 
-            string homeJson = await JsonHelper.GetJsonAsync(person.homeworld);
+            currentType = "Person";
+            currentName = person.Name;
+
+            lblPersonName.Text = personEntity.GetDisplay();
+            lblHeight.Text = person.Height;
+            lblMass.Text = person.Mass;
+            lblHairColor.Text = person.HairColor;
+            lblSkinColor.Text = person.SkinColor;
+            lblEyeColor.Text = person.EyeColor;
+            lblBirthYear.Text = person.BirthYear;
+            lblGender.Text = person.Gender;
+
+            string homeJson = await JsonHelper.GetJsonAsync(person.Homeworld);
             Planet home = JsonConvert.DeserializeObject<Planet>(homeJson);
-            lblHomeworld.Text = home.name;
+            lblHomeworld.Text = home.Name;
 
             lstStarships.Items.Clear();
 
-            if (person.starships != null && person.starships.Length > 0)
+            if (person.Starships != null && person.Starships.Length > 0)
             {
-                foreach (string shipUrl in person.starships)
+                foreach (string shipUrl in person.Starships)
                 {
                     string jsonShip = await JsonHelper.GetJsonAsync(shipUrl);
                     Starship ship = JsonConvert.DeserializeObject<Starship>(jsonShip);
 
-                    lstStarships.Items.Add(ship.name);
+                    lstStarships.Items.Add(ship.Name);
                 }
             }
             else
@@ -96,7 +122,14 @@ namespace StarWars
 
         private async void btnSpecies_Click(object sender, EventArgs e)
         {
-            string url = $"https://swapi.py4e.com/api/species/{txtSpeciesID.Text}/";
+            //INPUT VALIDATION
+            if (!int.TryParse(txtSpeciesID.Text, out int speciesId))
+            {
+                MessageBox.Show("Please enter a valid Species ID (number).");
+                return;
+            }
+
+            string url = $"https://swapi.py4e.com/api/species/{speciesId}/";
 
             string json = await JsonHelper.GetJsonAsync(url);
 
@@ -108,21 +141,24 @@ namespace StarWars
 
             Species species = JsonConvert.DeserializeObject<Species>(json);
 
-            lblSpeciesName.Text = species.name;
-            lblClassification.Text = species.classification;
-            lblDesignation.Text = species.designation;
-            lblAvgHeight.Text = species.average_height;
-            lblSkinColors.Text = species.skin_colors;
-            lblHairColors.Text = species.hair_colors;
-            lblEyeColors.Text = species.eye_colors;
-            lblLifespan.Text = species.average_lifespan;
-            lblLanguage.Text = species.language;
+            currentType = "Species";
+            currentName = species.Name;
 
-            if (!string.IsNullOrEmpty(species.homeworld))
+            lblSpeciesName.Text = species.Name;
+            lblClassification.Text = species.Classification;
+            lblDesignation.Text = species.Designation;
+            lblAvgHeight.Text = species.AverageHeight;
+            lblSkinColors.Text = species.SkinColors;
+            lblHairColors.Text = species.HairColors;
+            lblEyeColors.Text = species.EyeColors;
+            lblLifespan.Text = species.AverageLifespan;
+            lblLanguage.Text = species.Language;
+
+            if (!string.IsNullOrEmpty(species.Homeworld))
             {
-                string homeJson = await JsonHelper.GetJsonAsync(species.homeworld);
+                string homeJson = await JsonHelper.GetJsonAsync(species.Homeworld);
                 Planet home = JsonConvert.DeserializeObject<Planet>(homeJson);
-                lblHomeworlds.Text = home.name;
+                lblHomeworlds.Text = home.Name;
             }
             else
             {
@@ -160,6 +196,32 @@ namespace StarWars
                 btnSpecies.PerformClick();
                 e.SuppressKeyPress = true; // stops the beep sound
             }
+        }
+
+        private void btnAddFavorite_Click(object sender, EventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(currentName) || string.IsNullOrWhiteSpace(currentType))
+            {
+                MessageBox.Show("Nothing loaded to favorite.");
+                return;
+            }
+
+            AddFavorite(currentName, currentType);
+        }
+
+        private void AddFavorite(string name, string type)
+        {
+            if (favorites.Any(f => f.Name == name && f.Category == type))
+            {
+                MessageBox.Show("Already added.");
+                return;
+            }
+
+            FavoriteItem fav = new FavoriteItem(name, type);
+
+            favorites.Add(fav);
+
+            lstFavorites.Items.Add($"{fav.Name} ({fav.Category})");
         }
     }
 }
